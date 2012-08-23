@@ -1,3 +1,10 @@
+/*
+	Nofel Shanta
+	Student ID: s3254869
+	Web Database Application - Assignment 1
+	Part C - Create Part B using Smarty Template
+	Date 24/08/2012
+*/
 <?php
 require_once('dbconfig.php');
 ?>
