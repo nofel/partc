@@ -43,3 +43,43 @@ if($startyear>$endyear)
 }
 
 
+if($stocknum!='')
+{
+	if(!is_numeric($stocknum))
+	{
+		$errordisplay.="The value entered for minimum stock is not valid";
+		$errordisplay.="<br/>";
+	}
+}
+
+if($mincost!='')
+{
+	if(!is_numeric($mincost))
+	{
+		$errordisplay.="The value entered for the minimum cost is not valid";
+		$errordisplay.="<br/>";
+	}
+}
+
+if($maxcost!='')
+{
+	if(!is_numeric($maxcost))
+	{
+		$errordisplay.="The value for maximum cost entered is not valid";
+		$errordisplay.="<br/>";
+	}
+}
+
+?>
+
+<!DOCTYPE HTML PUBLIC
+		"-//W3C//DTD HTML 4.01 Transitional//EN"
+		 "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Wine Search (s3254869)</title>
+</head>
+<body style="background-color:#FFFFCC">
+<h2 align="center">Search Results</h2>
+
