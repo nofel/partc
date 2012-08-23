@@ -114,3 +114,72 @@ $sql = "SELECT w.wine_name, gv.variety, w.year, wi.winery_name, r.region_name, i
 		 AND w.wine_id = inv.wine_id
 		 AND gv.variety_id = wv.variety_id";
 
+
+$sql = $sql . " AND w.wine_name like ?";
+$sql = $sql . " AND wi.winery_name like ?";
+if($region!='1')
+{ $sql = $sql . " AND r.region_id = ?"; }
+$sql = $sql . " AND w.year >= ? and w.year<=?";
+
+if($region!='1')
+{ $values = 
+array("%".$wine."%","%".$winery."%",$region,$startyear,$endyear); }
+else
+{ $values = array("%".$wine."%","%".$winery."%",$startyear,$endyear); }
+
+if($stocknum!='')
+{
+	$sql = $sql . " AND inv.on_hand>=?";
+	array_push($values,$stocknum);
+}
+
+if($mincost!='')
+{
+	$sql = $sql . " AND inv.cost>=?";
+	array_push($values,$mincost);
+}
+
+if($maxcost!='')
+{
+	$sql = $sql . " AND inv.cost<=?";
+	array_push($values,$maxcost);
+}
+
+$stmt = $pdo_variable->prepare($sql);
+$stmt->execute($values);
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$numrecords = count($rows);
+
+
+if($numrecords==0)
+{
+	$str="<br/><font color='red' size='5'>No records match your search criteria</font>";
+	$str.="<br/><br/><a href='history.back()'>Go back to try again</a><br/>";
+}
+else
+{ 
+    $str="<br/>".$numrecords." records match your search criteria<br/><br/>"; 
+}
+
+$stmt = $pdo_variable->prepare($sql);
+	$stmt->execute($values);
+	$i=0;
+	$arr=array();
+	while ($row = $stmt->fetch(PDO::FETCH_OBJ))
+	{
+		$arr[$i]['wine_name']=$row->wine_name;
+		$arr[$i]['variety']=$row->variety;
+		$arr[$i]['year']=$row->year;
+		$arr[$i]['winery_name']=$row->winery_name;
+		$arr[$i]['region_name']=$row->region_name;
+		$arr[$i]['cost']=$row->cost;
+		$i=$i+1;
+	}
+
+	echo "</table>";
+
+    $smarty->assign('searchresult', $str);
+    $smarty->assign('records', $arr);
+    $smarty->display('result_template.tpl');
+?>
+
