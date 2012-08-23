@@ -35,3 +35,44 @@ error_reporting(E_ALL);
 	  $smarty->assign('regionSelect', $default);
 ?>
 
+<?php
+	  /* Populate the start year dropdown */
+	  $yeararr = array();
+	  $default = '';
+	  // populate the list of regions from the database
+	  $pdoobject = new PDO($dsn, DB_USER, DB_PW);
+	  $pdoobject->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	  $query = 'select distinct year from wine order by year asc';
+	  $result = $pdoobject->query($query);
+	  $i=0;
+	  while ($row = $result->fetch(PDO::FETCH_OBJ))
+	  {
+		if($i==0)
+		{ $default = $row->year; }
+		$i = $i + 1;
+		$yeararr[$row->year] = $row->year;
+	  }
+	  $smarty->assign('startyearOptions', $yeararr);
+	  $smarty->assign('startyearSelect', $default);
+?>
+<?php
+	  /* Populate the end year dropdown */
+	  $yeararr = array();
+	  $default = '';
+	  // populate the list of regions from the database
+	  $pdoobject = new PDO($dsn, DB_USER, DB_PW);
+	  $pdoobject->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	  $query = 'select distinct year from wine order by year asc';
+	  $result = $pdoobject->query($query);
+	  $i=0;
+	  while ($row = $result->fetch(PDO::FETCH_OBJ))
+	  {
+		if($i==0)
+		{ $default = $row->year; }
+		$i = $i + 1;
+		$yeararr[$row->year] = $row->year;
+	  }
+	  $smarty->assign('endyearOptions', $yeararr);
+	  $smarty->assign('endyearSelect', $default);
+?>
+
