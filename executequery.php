@@ -36,5 +36,10 @@ $stocknum = clean_sql($_GET, "stocknum", 5, $connection);
 $errordisplay ='';
 
 
+if($startyear>$endyear)
+{
+	$errordisplay.="Start year must be same as or before the end year";
+	$errordisplay.="<br/>";
+}
 
 
