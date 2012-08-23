@@ -1,3 +1,11 @@
+/*
+   Name: Nofel Shanta
+   Student ID: s3254869
+   Web Database Application - Assignment 1
+   Part B - Develop a two component query module.
+   Date 24/8/2012
+*/
+
 <?php
 error_reporting(E_ALL);
 
@@ -12,6 +20,7 @@ $smarty->compile_dir = USER_HOME_DIR . "/php/Smarty-Work-Dir/templates_c";
 $smarty->cache_dir = USER_HOME_DIR . "/php/Smarty-Work-Dir/cache";
 $smarty->config_dir = USER_HOME_DIR . "/php/Smarty-Work-Dir/configs";
 
+// if the connection can not be established, then show error
 if (!($connection = @ mysql_connect(DB_HOST . ":" . DB_PORT, DB_USER, DB_PW)))
 {
 	display_error();
@@ -24,6 +33,7 @@ if (!mysql_select_db('winestore', $connection))
 }
 
 
+// get all required inputs from the form
 $region = clean_sql($_GET, "region", 4, $connection);
 $startyear = clean_sql($_GET, "startyear", 4, $connection);
 $mincost = clean_sql($_GET, "mincost", 50, $connection);
@@ -35,14 +45,17 @@ $stocknum = clean_sql($_GET, "stocknum", 5, $connection);
 
 $errordisplay ='';
 
+/* perform some basic validations to ensure that at least some records will be 
+returned to the user */
 
+// validation 1 - start year must be after the end year
 if($startyear>$endyear)
 {
 	$errordisplay.="Start year must be same as or before the end year";
 	$errordisplay.="<br/>";
 }
 
-
+// make sure the stock number is a valid number if it has been supplied
 if($stocknum!='')
 {
 	if(!is_numeric($stocknum))
@@ -86,14 +99,11 @@ if($maxcost!='')
 <?php
 if($errordisplay!='')
 {
-	$str1= "<font 
-color='red'><strong>".$errordisplay."</strong></font>";
+	$str1= "<font color='red'><strong>".$errordisplay."</strong></font>";
 	$str1.="<br/><br/>";
-	$str1.="There are errors in what you have submitted. Please 
-enter search criteria again.";
+	$str1.="There are errors in what you have submitted. Please enter search criteria again.";
 	$str1.="<br/>";
-	$str1.="<a href='javascript:history.back()'>Go back to fix 
-search criteria.</a><br/>";
+	$str1.="<a href='javascript:history.back()'>Go back to fix search criteria.</a><br/>";
 	$smarty->assign('errorresult', $str1);
 }
 
@@ -101,7 +111,7 @@ search criteria.</a><br/>";
 
 <?php
 
-
+// create a PDO connection
 $pdo_variable = new PDO($dsn, DB_USER, DB_PW);
 $pdo_variable->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -114,19 +124,21 @@ $sql = "SELECT w.wine_name, gv.variety, w.year, wi.winery_name, r.region_name, i
 		 AND w.wine_id = inv.wine_id
 		 AND gv.variety_id = wv.variety_id";
 
-
+// add the search criteria into the qery
 $sql = $sql . " AND w.wine_name like ?";
 $sql = $sql . " AND wi.winery_name like ?";
 if($region!='1')
 { $sql = $sql . " AND r.region_id = ?"; }
 $sql = $sql . " AND w.year >= ? and w.year<=?";
 
+// create a values array for the remaining
 if($region!='1')
 { $values = 
 array("%".$wine."%","%".$winery."%",$region,$startyear,$endyear); }
 else
 { $values = array("%".$wine."%","%".$winery."%",$startyear,$endyear); }
 
+// optional values of stock number, minimum cost and maximum cost are to be inserted now
 if($stocknum!='')
 {
 	$sql = $sql . " AND inv.on_hand>=?";
@@ -145,6 +157,7 @@ if($maxcost!='')
 	array_push($values,$maxcost);
 }
 
+// execute the query and fetch the records that are needed
 $stmt = $pdo_variable->prepare($sql);
 $stmt->execute($values);
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -161,7 +174,8 @@ else
     $str="<br/>".$numrecords." records match your search criteria<br/><br/>"; 
 }
 
-$stmt = $pdo_variable->prepare($sql);
+        // execute the statement
+        $stmt = $pdo_variable->prepare($sql);
 	$stmt->execute($values);
 	$i=0;
 	$arr=array();
