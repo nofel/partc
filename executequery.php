@@ -83,3 +83,34 @@ if($maxcost!='')
 <body style="background-color:#FFFFCC">
 <h2 align="center">Search Results</h2>
 
+<?php
+if($errordisplay!='')
+{
+	$str1= "<font 
+color='red'><strong>".$errordisplay."</strong></font>";
+	$str1.="<br/><br/>";
+	$str1.="There are errors in what you have submitted. Please 
+enter search criteria again.";
+	$str1.="<br/>";
+	$str1.="<a href='javascript:history.back()'>Go back to fix 
+search criteria.</a><br/>";
+	$smarty->assign('errorresult', $str1);
+}
+
+?>
+
+<?php
+
+
+$pdo_variable = new PDO($dsn, DB_USER, DB_PW);
+$pdo_variable->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+
+$sql = "SELECT w.wine_name, gv.variety, w.year, wi.winery_name, r.region_name, inv.cost
+		 FROM wine w, winery wi, region r, inventory inv, grape_variety gv, wine_variety wv
+		 WHERE w.winery_id = wi.winery_id
+		 AND wi.region_id = r.region_id
+		 AND w.wine_id = wv.wine_id
+		 AND w.wine_id = inv.wine_id
+		 AND gv.variety_id = wv.variety_id";
+
