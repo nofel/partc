@@ -75,4 +75,7 @@ error_reporting(E_ALL);
 	  $smarty->assign('endyearOptions', $yeararr);
 	  $smarty->assign('endyearSelect', $default);
 ?>
+<?php
+      $smarty->display('winery_template.ptl');
+?>
 
