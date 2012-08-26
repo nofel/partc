@@ -1,12 +1,11 @@
+<?php
 /*
    Name: Nofel Shanta
    Student ID: s3254869
    Web Database Application - Assignment 1
    Part B - Develop a two component query module.
-   Date 24/8/2012
 */
 
-<?php
 error_reporting(E_ALL);
 
 // include the database configuration
