@@ -55,21 +55,21 @@ if($startyear>$endyear)
 }
 
 // make sure the stock number is a valid number if it has been supplied
-if($stocknum!='')
-{
+  if($stocknum!='')
+  {
 	if(!is_numeric($stocknum))
 	{
-		$errordisplay.="The value entered for minimum stock is not valid";
-		$errordisplay.="<br/>";
+	$errordisplay.="The value entered for minimum stock is not valid";
+	$errordisplay.="<br/>";
 	}
-}
+  }
 
-if($mincost!='')
-{
+	if($mincost!='')
+	{
 	if(!is_numeric($mincost))
 	{
-		$errordisplay.="The value entered for the minimum cost is not valid";
-		$errordisplay.="<br/>";
+	$errordisplay.="The value entered for the minimum cost is not valid";
+	$errordisplay.="<br/>";
 	}
 }
 
@@ -110,7 +110,7 @@ if($errordisplay!='')
 
 <?php
 
-// create a PDO connection
+/* create a PDO connection */
 $pdo_variable = new PDO($dsn, DB_USER, DB_PW);
 $pdo_variable->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -123,40 +123,41 @@ $sql = "SELECT w.wine_name, gv.variety, w.year, wi.winery_name, r.region_name, i
 		 AND w.wine_id = inv.wine_id
 		 AND gv.variety_id = wv.variety_id";
 
-// add the search criteria into the qery
+/* add the search criteria into the qery */
 $sql = $sql . " AND w.wine_name like ?";
 $sql = $sql . " AND wi.winery_name like ?";
-if($region!='1')
-{ $sql = $sql . " AND r.region_id = ?"; }
-$sql = $sql . " AND w.year >= ? and w.year<=?";
+	if($region!='1')
+	{
+ 	$sql = $sql . " AND r.region_id = ?";
+	 }
+	$sql = $sql . " AND w.year >= ? and w.year<=?";
 
-// create a values array for the remaining
+/* create a values array for the remaining */
 if($region!='1')
-{ $values = 
-array("%".$wine."%","%".$winery."%",$region,$startyear,$endyear); }
+{ $values = array("%".$wine."%","%".$winery."%",$region,$startyear,$endyear); }
 else
 { $values = array("%".$wine."%","%".$winery."%",$startyear,$endyear); }
 
-// optional values of stock number, minimum cost and maximum cost are to be inserted now
-if($stocknum!='')
-{
+/* optional values of stock number, minimum cost and maximum cost are to be inserted now */
+	if($stocknum!='')
+	{
 	$sql = $sql . " AND inv.on_hand>=?";
 	array_push($values,$stocknum);
-}
+	}
 
-if($mincost!='')
-{
+	if($mincost!='')
+	{
 	$sql = $sql . " AND inv.cost>=?";
 	array_push($values,$mincost);
-}
+	}
 
-if($maxcost!='')
-{
+	if($maxcost!='')
+	{
 	$sql = $sql . " AND inv.cost<=?";
 	array_push($values,$maxcost);
-}
+	}
 
-// execute the query and fetch the records that are needed
+/* execute the query and fetch the records that are needed */
 $stmt = $pdo_variable->prepare($sql);
 $stmt->execute($values);
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -173,7 +174,7 @@ else
     $str="<br/>".$numrecords." records match your search criteria<br/><br/>"; 
 }
 
-        // execute the statement
+        /* execute the statement */
         $stmt = $pdo_variable->prepare($sql);
 	$stmt->execute($values);
 	$i=0;
@@ -195,4 +196,3 @@ else
     $smarty->assign('records', $arr);
     $smarty->display('result_template.tpl');
 ?>
-
