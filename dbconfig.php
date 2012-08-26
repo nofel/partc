@@ -1,10 +1,9 @@
-</php
+<?php
 /*
   Nofel Shanta
   Student ID: s3254869
   Web Database Applicaton - Assignment1
   Part B - Develop a two component query module.
-  Date 23/08/2012
 */
 
 define('DB_HOST', 'yallara.cs.rmit.edu.au');
@@ -22,10 +21,10 @@ function display_error()
 }
 
 // Function to clean an array
-// This is the security feature - to get rid of all special character 
-(convert to escape sequence)
+
+// This is the security feature - to get rid of all special character (convert to escape sequence)
 function clean_sql($array, $index, $maxlength, $connection)
-{
+ {
   if (isset($array["{$index}"]))
   {
      $input = substr($array["{$index}"], 0, $maxlength);
